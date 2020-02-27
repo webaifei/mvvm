@@ -13,10 +13,15 @@
 
 	<script src="http://cdn.bootcss.com/vue/1.0.25/vue.js"></script>
 	<script>
+		debugger;
 		var vm = new Vue({
 			el: '#vue-app',
 			data: {
-				word: 'Hello World!'
+				word: 'Hello World!',
+				child: {
+					name: "ngnice",
+					arr: [1,2,3]
+				}
 			},
 
 			methods: {

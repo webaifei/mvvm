@@ -26,13 +26,16 @@ Observer.prototype = {
                 if (Dep.target) {
                     dep.depend();
                 }
+                console.log('get')
                 return val;
             },
             set: function(newVal) {
                 if (newVal === val) {
                     return;
                 }
-                val = newVal;
+                console.log('set');
+                
+                data[key] = newVal;
                 // 新的值是object的话，进行监听
                 childObj = observe(newVal);
                 // 通知订阅者

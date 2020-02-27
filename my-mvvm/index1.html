@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据劫持</title>
+</head>
+<body>
+    <div id="app">
+       {{name}}
+    </div>
+</body>
+<script>
+    function is(obj, Type) {
+        return Object.prototype.toString.call(obj) === `[object ${Type}]`;
+    }
+
+    // vue构造函数
+    function Vue(id, options) {
+        this.root = document.querySelector(id);
+        if(is(options.data, 'Function')) {
+            this._data = options.data();
+        } else if(is(options.data, 'Object')){
+            this._data = options.data;
+        }
+
+        observer(this,this._data);
+        
+    }
+
+    function observer(vm, data) {
+        for(let key in data) {
+            let value = data[key];
+            debugger;
+            if(is(value, 'Object')) {
+                console.log(vm[key])
+                observer(vm[key], value);
+            } else {
+                Object.defineProperty(vm, key, {
+                    configurable: false,
+                    enumerable: true,
+                    get() {
+                        console.log('getting value of ', key);
+                        
+                        return vm._data[key];
+                    },
+                    set(val) {
+                        console.log('setting value', val)
+                        vm._data[key] = val;
+                    }
+                })
+            }
+        }
+    }
+</script>
+<script>
+    // 初始化一个vue实例对象 
+    var vm = new Vue('#app', {
+        data() {
+            return {
+                name: "ngnice",
+                age: 10,
+                child: {
+                    name: "alo"
+                }
+            }
+        },
+        computed: {
+
+        },
+        methods: {
+
+        },
+        watch: {
+
+        }
+    })
+    
+    // 通过vm实例修改 data数据
+    setTimeout(()=> {
+        vm.name = "changed ngnice";
+        console.log(vm.name);
+        vm.child.name = "new alo"
+    }, 1000);
+    console.log(vm);
+    
+    
+
+</script>
+
+</html>

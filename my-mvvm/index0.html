@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据劫持</title>
+</head>
+<body>
+    <div id="app">
+       
+    </div>
+</body>
+<script>
+    var data = {
+        name: "ngice",
+        child: {
+            name: "ala"
+        }
+    }
+    var alias = data;
+    observer(alias, 'name', data.name)
+    console.log(data.name);
+    data.name = "aaa";
+    console.log(data.child.name);
+    data.child.name = "new ala";
+    console.log(data.name);
+    
+    
+    // var name = data.name;
+    // name = "aa";
+    // console.log(name, data.name)
+    function observer(obj, key, value) {
+        Object.defineProperty(data, 'name', {
+            configurable: false,
+            enumerable: true,
+            get() {
+                console.log('gettting value:', value)
+                return value;
+            },
+            set(newVal) {
+                console.log('setting value:', value)
+                value = newVal;
+            }
+        
+        })
+    }
+</script>
+
+</html>
